@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="lab1" default="executa">
+
+	<property name="bin" value="bin" />
+	
+	<path id="classpath.test">
+		<pathelement location="${bin}"/>
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="limpa" description="description">
+		<delete dir="${bin}" />
+	</target>
+
+	<target name="compila" depends="limpa">
+		<mkdir dir="${bin}" />
+		<javac srcdir="src" destdir="${bin}">
+			<classpath refid="classpath.test" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="compila">
+		<jar jarfile="src/${ant.project.name}.jar" basedir="bin" >
+			<manifest>
+				<attribute name="Main-Class" value="ufcg.si1.Classe" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="testa" depends="compila">
+		<junit haltonfailure="yes">
+			<classpath refid="classpath.test" />
+			<formatter type="plain" usefile="false"/>
+			<test name="ufcg.si1.TesteClasse" />
+		</junit>
+	</target>
+
+	<target name="executa" depends="testa">
+		<java jar="src/${ant.project.name}.jar" fork="true" />
+	</target>
+
+</project>
